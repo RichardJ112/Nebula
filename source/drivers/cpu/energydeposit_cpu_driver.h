@@ -26,7 +26,7 @@ public:
 
 	/// Constructor
 	energydeposit_cpu_driver(
-		geometry_manager_t const & geometry,
+		geometry_manager_t & geometry,
 		intersect_t const & intersect,
 		std::vector<material_t> const & materials,
 		real energy_threshold = 0,

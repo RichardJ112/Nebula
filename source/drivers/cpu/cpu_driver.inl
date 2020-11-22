@@ -4,7 +4,7 @@ template<typename scatter_list_t,
 	typename intersect_t,
 	typename geometry_manager_t>
 cpu_driver<scatter_list_t, intersect_t, geometry_manager_t>::cpu_driver(
-	geometry_manager_t geometry,
+	geometry_manager_t& geometry,
 	intersect_t intersect,
 	std::vector<material_t> const & materials,
 	real energy_threshold,

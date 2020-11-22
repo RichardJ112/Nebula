@@ -52,6 +52,12 @@ public:
 	// Get primary tag
 	inline PHYSICS primary_tag_t get_primary_tag(particle_index_t i) const;
 
+	// Get electron species
+	inline PHYSICS uint8_t get_species(particle_index_t i);
+
+	// set electron species
+	inline PHYSICS void set_species(particle_index_t i, uint8_t species);
+
 	// Get last intersected triangle for a particle (or nullptr)
 	inline PHYSICS triangle const * get_last_triangle(particle_index_t i) const;
 	inline PHYSICS void forget_last_triangle(particle_index_t i);
@@ -97,6 +103,7 @@ protected:
 		primary_tag_t primary_tag; // Tag belonging to primary electron
 		uint32_t secondary_tag;    // Unique tag for this electron in the primary's cascade
 		triangle* last_triangle;
+		uint8_t species; // Species identifier (PE, FSE, BSE, VE, SE_PE, SE_FSE, SE_BSE, SE_VE)
 	};
 	std::vector<particle_struct> particles;
 

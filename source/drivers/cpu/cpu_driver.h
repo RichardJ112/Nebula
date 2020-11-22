@@ -84,7 +84,7 @@ protected:
 	 *                         which particles must be terminated.
 	 * \param seed             Seed for the random number generator.
 	 */
-	cpu_driver(geometry_manager_t geometry,
+	cpu_driver(geometry_manager_t & geometry,
 		intersect_t intersect,
 		std::vector<material_t> const & materials,
 		real energy_threshold = 0,
@@ -95,7 +95,7 @@ protected:
 
 	particle_manager_t _particles;
 	material_manager_t _materials;
-	geometry_manager_t _geometry;
+	geometry_manager_t& _geometry;
 	intersect_t _intersect;
 
 	// Random number generator

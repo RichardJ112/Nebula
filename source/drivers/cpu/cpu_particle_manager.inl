@@ -34,7 +34,8 @@ auto cpu_particle_manager<material_manager_t>::push(
 			primary_particles[i],
 			tags[i],
 			0,
-			nullptr
+			nullptr,
+			0
 		});
 
 		cascades.insert(std::make_pair(tags[i], cascade_struct{1, 1}));
@@ -150,6 +151,34 @@ PHYSICS auto cpu_particle_manager<material_manager_t>::get_primary_tag(particle_
 }
 
 template<typename material_manager_t>
+PHYSICS auto cpu_particle_manager<material_manager_t>::get_species(particle_index_t i)
+-> uint8_t
+{
+	if(particles[i].species != 0)
+	{
+		return particles[i].species;
+	}
+
+	if(particles[i].particle_data.dir.z > 0.999)
+	{
+		return 0; // PE
+	}
+	if(particles[i].particle_data.dir.z > 0)
+	{
+		return 1; // FSE
+	}
+	return 2; // BSE
+	
+}
+
+template<typename material_manager_t>
+PHYSICS auto cpu_particle_manager<material_manager_t>::set_species(particle_index_t i, uint8_t species)
+-> void
+{
+	particles[i].species = species;
+}
+
+template<typename material_manager_t>
 PHYSICS triangle const * cpu_particle_manager<material_manager_t>::get_last_triangle(
 	particle_index_t i) const
 {
@@ -182,6 +211,34 @@ template<typename material_manager_t>
 PHYSICS void cpu_particle_manager<material_manager_t>::create_secondary(
 	particle_index_t primary_idx, particle secondary_particle)
 {
+	uint8_t species;
+
+	particle PE = particles[primary_idx].particle_data;
+
+	if (particles[primary_idx].species == 0)
+	{
+		if (PE.dir.z > 0.999)
+		{
+			species = 4; // SE_PE
+		}
+		else if (PE.dir.z > 0)
+		{
+			species = 5; // SE_FSE
+		}
+		else
+		{
+			species = 6; // SE_BSE
+		}
+	}
+	else if (particles[primary_idx].species == 3)
+	{
+		species = 7; //SE_VE
+	}
+	else
+	{
+		species = particles[primary_idx].species;
+	}
+	
 	const auto primary_tag = particles[primary_idx].primary_tag;
 	particles.push_back({
 		NO_EVENT,
@@ -190,7 +247,8 @@ PHYSICS void cpu_particle_manager<material_manager_t>::create_secondary(
 		secondary_particle,
 		primary_tag,
 		cascades[primary_tag].next_secondary_tag++,
-		nullptr
+		nullptr,
+		species
 	});
 	++cascades[primary_tag].running_count;
 }
